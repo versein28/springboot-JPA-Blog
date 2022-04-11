@@ -29,7 +29,7 @@ public class Users {
 	@GeneratedValue(strategy = GenerationType.AUTO) // GenerationType.IDENTIFY 프로젝트에 연결된 DB의 넘버링 전략을 따라간다 -> tibero는?
 	private int id;
 	
-	@Column(nullable = false, length = 30)
+	@Column(nullable = false, length = 30, unique = true)
 	private String username;
 
 	@Column(nullable = false, length = 100) // 123456 => 해쉬(비밀번호 암호화)
