@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 public class Reply {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@Column(nullable = false, length = 200)
@@ -42,5 +42,11 @@ public class Reply {
 	
 	@CreationTimestamp
 	private Timestamp createDate;
+	
+	@Override
+	public String toString() {
+		return "Reply [id=" + id + ", content=" + content + ", board=" + board + ", user=" + user + ", createDate="
+				+ createDate + "]";
+	}
 	
 }

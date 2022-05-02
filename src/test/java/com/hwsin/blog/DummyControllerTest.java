@@ -1,4 +1,4 @@
-package com.hwsin.blog.test;
+package com.hwsin.blog;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -86,7 +86,7 @@ public class DummyControllerTest {
 	
 	//한 페이지당 2건에 데이터를 리턴받아 볼 예정
 	@GetMapping("/dummy/user")
-	public List<Users> pageList(@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+	public Page<Users> pageList(@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
 		Page<Users> pagingUser = usersRepository.findAll(pageable);
 		
 		/*
@@ -95,7 +95,7 @@ public class DummyControllerTest {
 		 * }
 		 */
 		List<Users> users = pagingUser.getContent();
-		return users;
+		return pagingUser;
 	}
 	
 	@GetMapping("/dummy/user/{id}")
