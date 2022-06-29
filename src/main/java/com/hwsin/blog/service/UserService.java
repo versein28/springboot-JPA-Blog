@@ -1,6 +1,11 @@
 package com.hwsin.blog.service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +36,7 @@ public class UserService {
 		} catch (Exception e) {
 			return -1;
 		}
-		
+
 	}
 
 	/*
@@ -47,7 +52,7 @@ public class UserService {
 		Users user = userRepository.findByUsername(username).orElseGet(() -> {
 			return new Users();
 		});
-		System.out.println("회원찾기 결과:"+user);
+		System.out.println("회원찾기 결과:" + user);
 		return user;
 	}
 
@@ -72,4 +77,22 @@ public class UserService {
 		// 회원수정 함수 종료시 = 서비스 종료 = 트랜잭션 종료 = commit 이 자동으로 됩니다.
 		// 영속화된 persistance 객체의 변화가 감지되면 더티체킹이 되어 update문을 날려줌.
 	}
+
+	@Transactional
+	public String 비밀번호찾기(String username, String email) {
+		Users user = userRepository.findByUsernameAndEmail(username, email).orElseThrow(() -> {
+			return new IllegalArgumentException("존재하지 않는  계정");
+		});
+		System.out.println("계정유무확인 결과:" + user);
+
+		// 임시비밀번호를 발급한다
+		UUID uid = UUID.randomUUID();
+		String pwd = uid.toString().substring(0, 6);
+
+		String encPassword = encoder.encode(pwd);
+		user.setPassword(encPassword); // 암호화 시킨 비밀번호를 저장
+
+		return pwd;
+	}
+
 }

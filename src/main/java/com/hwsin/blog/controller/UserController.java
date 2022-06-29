@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +22,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,13 +30,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hwsin.blog.config.auth.PrincipalDetail;
+import com.hwsin.blog.dto.ResponseDto;
 import com.hwsin.blog.model.OAuthToken;
 import com.hwsin.blog.model.Users;
 import com.hwsin.blog.model.kakaoProfile;
 import com.hwsin.blog.service.UserService;
 
 //인증이 안된 사용자들이 출입할 수 있는 경로를 /auth/** 허용
-//그냥 주소가 /이며 index.jsp 허용
+//그냥 주소가 /이며 notice.jsp 허용
 //static이하에 있는 /js/**, /css/**, /image/** 
 
 @Controller
@@ -59,6 +64,12 @@ public class UserController {
 		return "user/loginForm";
 	}
 	
+	@GetMapping("/auth/pwdSearchForm")
+	public String pwdSearchForm() {
+		
+		return "user/pwdSearchForm";
+	}
+	
 	@GetMapping("/auth/kakao/callback")
 	public String kakaoCallback(String code) {
 		// POST방식으로 key=value 데이터를 요청 (카카오쪽으로)
@@ -76,8 +87,8 @@ public class UserController {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
 		params.add("client_id", "976c659784c035a34f0f977c860fe2a0");
-		//로컬 params.add("redirect_uri", "http://localhost:8080/auth/kakao/callback");
-		params.add("redirect_uri", "https://www.hwsin.shop/auth/kakao/callback");
+		params.add("redirect_uri", "http://localhost:8080/auth/kakao/callback");
+		//운영 params.add("redirect_uri", "https://www.hwsin.shop/auth/kakao/callback");
 		params.add("code", code);
 		
 		// HttpHeader와 HttpBody를 하나의 오브젝트에 담기
@@ -165,8 +176,9 @@ public class UserController {
 	}	
 		
 	@GetMapping("/user/updateForm")
-	public String updateForm(@AuthenticationPrincipal PrincipalDetail principal) {
+	public String updateForm() {
 		
 		return "user/updateForm";
 	}
+	
 }

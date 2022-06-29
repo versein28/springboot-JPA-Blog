@@ -1,9 +1,14 @@
 package com.hwsin.blog.controller.api;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,11 +16,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hwsin.blog.config.SecurityConfig;
 import com.hwsin.blog.config.auth.PrincipalDetail;
 import com.hwsin.blog.dto.ResponseDto;
 import com.hwsin.blog.model.RoleType;
@@ -34,6 +42,9 @@ public class UserApiController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
+	@Autowired
+	private JavaMailSender javaMailSender;
+
 	@PostMapping("/auth/joinProc")
 	public ResponseDto<Integer> save(@RequestBody Users user) { // username,email,password
 		System.out.println("UserApiController : save 호출됨");
@@ -53,15 +64,27 @@ public class UserApiController {
 	 */
 	@PutMapping("/user")
 	public ResponseDto<Integer> update(@RequestBody Users user) {
-		System.out.println("11111111");
 		userService.회원수정(user);
-		//여기선ㄴ 트랜잭션이 종료되기 때문에 DB에 값은 변경이 돘음.
-		//그러나 세션값은 변경 되지 않은 상태이기 때문에 직접 세션값을 변경해줄 것임
-		//세션 등록
-		System.out.println("2222222222");
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+		// 여기선ㄴ 트랜잭션이 종료되기 때문에 DB에 값은 변경이 돘음.
+		// 그러나 세션값은 변경 되지 않은 상태이기 때문에 직접 세션값을 변경해줄 것임
+		// 세션 등록
+		Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
+
+		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+	}
+
+	@PostMapping("/auth/pwdSearch")
+	public ResponseDto<Integer> PwdSearchPost(@RequestBody Users user) {
+		String changedPwd = userService.비밀번호찾기(user.getUsername(), user.getEmail());
+
+		SimpleMailMessage simpleMessage = new SimpleMailMessage();
+		simpleMessage.setTo(user.getEmail());
+		simpleMessage.setSubject("임시 비밀번호 전달입니다");
+		simpleMessage.setText("임시 비밀번호:" + changedPwd);
+		javaMailSender.send(simpleMessage);
+
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
 
