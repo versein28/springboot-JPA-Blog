@@ -48,7 +48,7 @@ public class Product {
 	private String content; 
 
 	@Column(nullable = false,length = 100) // 상품 가격
-	private int prodKrw;
+	private String prodKrw;
 	
 	private int count;//조회수
 	

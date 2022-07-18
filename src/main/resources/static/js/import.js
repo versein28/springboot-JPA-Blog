@@ -9,6 +9,7 @@
         var prodAddress = $('#prodAddress').val();
         var prodAmount = $('#prodAmount').val();
         var prodKrw = $('#prodKrw').val();
+        var prodKrw = prodKrw.replace(",", "");
         var totalKrw = prodKrw * prodAmount;
         var userName = $('userName').val();
         
@@ -25,31 +26,35 @@
             buyer_postcode : '123-456',
             //m_redirect_url : 'http://www.naver.com'
         }, function(rsp) {
+        	console.log("rsp상태:"+rsp.success);
             if ( rsp.success ) {
-                //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기       
-                jQuery.ajax({
+                //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기    
+            	$.ajax({	
                     url: "/payments/complete", //cross-domain error가 발생하지 않도록 주의해주세요
-                    type: 'GET',
-                    dataType: 'json',
+                    type: 'POST',
+                    headers: { "Content-Type": "application/json" },
                     data: {
-                        imp_uid : rsp.imp_uid
-                        //기타 필요한 데이터가 있으면 추가 전달
+                        imp_uid: rsp.imp_uid
                     }
-                });
-         	   //[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우 -> 미구현        
+                }).done(function(data) {
+                	console.log("access_token:"+ data);
+         	   //[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우     
                     msg = '결제가 완료되었습니다.';
-                    msg += '\n고유ID : ' + rsp.imp_uid;
-                    msg += '\n상점 거래ID : ' + rsp.merchant_uid;
-                    msg += '\결제 금액 : ' + rsp.paid_amount;
-                    msg += '카드 승인번호 : ' + rsp.apply_num;
+                    msg += '\n고유ID : ' + data.imp_uid;
+                    msg += '\n상점 거래ID : ' + data.merchant_uid;
+                    msg += '\결제 금액 : ' + data.paid_amount;
+                    msg += '카드 승인번호 : ' + data.apply_num;
                     
                     alert(msg);
 
                     //성공시 이동할 페이지
-                    location.href="/auth/product";
+        /*            location.href="/auth/product";*/
+                }).fail(function(xhr, status, errorThrown) {
+                   console.log("오류명: " + errorThrown + "<br>"+"상태: " + status);
+                });
                 } else {
                 	 msg = '결제에 실패하였습니다.';
-                     msg += '에러내용 : ' + rsp.error_msg;
+                     msg += '에러내용 : ' + data.error_msg;
                      //실패시 이동할 페이지
                      location.href="/auth/product";
                      alert(msg);

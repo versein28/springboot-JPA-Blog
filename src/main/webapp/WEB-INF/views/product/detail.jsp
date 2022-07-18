@@ -31,7 +31,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="prodKrw">가격</label> <input type="number" class="form-control" value="${product.prodKrw}" id="prodKrw" readonly>
+			<label for="prodKrw">가격</label> <input type="text" class="form-control" value="${product.prodKrw}" id="prodKrw" readonly>
 		</div>
 	</form>
 	<div>

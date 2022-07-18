@@ -12,6 +12,7 @@
 				<div class="card-body">
 					<h5 class="card-title">${product.prodBrand}</h5>
 					<p class="card-text">${product.content}</p>
+					<p class="card-text">${product.prodKrw}원</p>
 					<a href="/product/${product.id}" class="btn btn-primary">주문하기</a>
 				</div>
 			</div>

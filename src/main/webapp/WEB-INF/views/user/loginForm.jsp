@@ -13,7 +13,7 @@
 		<!-- prod https://www.hwsin.shop/auth/kakao/callback -->
 		<!-- dev  http://localhost:8080/auth/kakao/callback -->
 		<button id="btn-login" class="btn btn-primary">로그인</button>
-		<a href="https://kauth.kakao.com/oauth/authorize?client_id=976c659784c035a34f0f977c860fe2a0&redirect_uri=http://localhost:8080/auth/kakao/callback&response_type=code"><img height="38px" src="/image/kakao_login_button.png"></a>
+		<a href="https://kauth.kakao.com/oauth/authorize?client_id=976c659784c035a34f0f977c860fe2a0&redirect_uri=https://www.hwsin.shop/auth/kakao/callback&response_type=code"><img height="38px" src="/image/kakao_login_button.png"></a>
 		<button class="btn btn-success" type="button" onclick="location.href = '/auth/pwdSearchForm'">비밀번호 찾기</button>
 	</form>
 </div>
