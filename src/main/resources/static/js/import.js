@@ -27,23 +27,26 @@
             //m_redirect_url : 'http://www.naver.com'
         }, function(rsp) {
         	console.log("rsp상태:"+rsp.success);
+        	
+        	var serial_imp_uid =
+        	{
+                imp_uid: rsp.imp_uid
+            };
             if ( rsp.success ) {
                 //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기    
             	$.ajax({	
                     url: "/payments/complete", //cross-domain error가 발생하지 않도록 주의해주세요
                     type: 'POST',
                     headers: { "Content-Type": "application/json" },
-                    data: {
-                        imp_uid: rsp.imp_uid
-                    }
-                }).done(function(data) {
-                	console.log("access_token:"+ data);
+                    data: JSON.stringify(serial_imp_uid)
+                }).done(function(info) {
+                	console.log("결제 정보:"+ JSON.stringify(info));
          	   //[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우     
                     msg = '결제가 완료되었습니다.';
-                    msg += '\n고유ID : ' + data.imp_uid;
-                    msg += '\n상점 거래ID : ' + data.merchant_uid;
-                    msg += '\결제 금액 : ' + data.paid_amount;
-                    msg += '카드 승인번호 : ' + data.apply_num;
+                    msg += '\n고유ID : ' + info.imp_uid;
+                    msg += '\n상점 거래ID : ' + info.merchant_uid;
+                    msg += '\결제 금액 : ' + info.amount;
+                    msg += '카드 승인번호 : ' + info.apply_num;
                     
                     alert(msg);
 

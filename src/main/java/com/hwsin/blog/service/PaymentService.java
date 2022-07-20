@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.hwsin.blog.dto.IamportDto;
 
 @Service
 public class PaymentService {
@@ -35,5 +39,25 @@ public class PaymentService {
 		HttpEntity<JSONObject> entity = new HttpEntity<>(body, headers);
 
 		return restTemplate.postForObject("https://api.iamport.kr/users/getToken", entity, String.class);
+	}
+	
+	public JSONObject GetPayInfo(String token, String imp_uid) throws ParseException {
+		JSONObject objData = (JSONObject) new JSONParser().parse(token);
+		JSONObject response = (JSONObject) objData.get("response");
+		String access_token = (String) response.get("access_token");
+		
+		RestTemplate restTemplate = new RestTemplate();
+
+		// 서버로 요청할 Header
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("Authorization", access_token);
+		
+		HttpEntity<String> entity = new HttpEntity<String>(headers);
+		
+		IamportDto iamportDto = restTemplate.postForObject("https://api.iamport.kr/payments/"+imp_uid , entity, IamportDto.class);
+		JSONObject rsp = iamportDto.getResponse();
+		
+		return rsp;
 	}
 }

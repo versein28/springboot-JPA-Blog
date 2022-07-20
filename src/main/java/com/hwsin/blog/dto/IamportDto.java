@@ -1,15 +1,16 @@
 package com.hwsin.blog.dto;
 
-import com.google.gson.JsonObject;
+
+import org.json.simple.JSONObject;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class IamportTokenDto {
+public class IamportDto {
 
 	private String code;
 	private String message;
-	private JsonObject response = new JsonObject();
+	private JSONObject response = new JSONObject();
 }
