@@ -42,7 +42,7 @@ import com.hwsin.blog.service.UserService;
 
 @Controller
 public class UserController {
-
+	//OAuth Key
 	@Value("${hwsin.key}")
 	private String hwsinKey;
 	
@@ -52,13 +52,25 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping("/auth/joinForm")
+	@GetMapping("/auth/joinForm") // 회원가입 선택
 	public String joinForm() {
 		
-		return "user/joinForm";
+		return "user/joinSelectionView";
 	}
 	
-	@GetMapping("/auth/loginForm")
+	@GetMapping("/auth/userJoinForm") //일반 회원가입
+	public String userJoinForm() {
+		
+		return "user/userJoinForm";
+	}
+	
+	@GetMapping("/auth/sellerJoinForm") // 사업자 회원가입
+	public String sellerJoinForm() {
+		
+		return "user/sellerJoinForm";
+	}
+	
+	@GetMapping("/auth/loginForm") //로그인 폼
 	public String loginForm() {
 		
 		return "user/loginForm";
@@ -152,10 +164,10 @@ public class UserController {
 		System.out.println("카카오 아이디(번호) : "+kakaoProfile.getId());
 		System.out.println("카카오 이메일 : "+kakaoProfile.getKakao_account().getEmail());
 		
-		System.out.println("블로그서버 유저네임 : "+kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
-		System.out.println("블로그서버 이메일 : "+kakaoProfile.getKakao_account().getEmail());
+		System.out.println("쇼핑몰 서버 유저네임 : "+kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
+		System.out.println("쇼핑몰 서버 이메일 : "+kakaoProfile.getKakao_account().getEmail());
 		// UUID란 -> 중복되지 않는 어떤 특정 값을 만들어내는 알고리즘
-		System.out.println("블로그서버 패스워드 : "+hwsinKey);
+		System.out.println("쇼핑몰 서버 패스워드 : "+hwsinKey);
 		
 		Users kakaoUser = Users.builder()
 				.username(kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId())

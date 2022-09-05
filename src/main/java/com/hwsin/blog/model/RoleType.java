@@ -1,6 +1,10 @@
 package com.hwsin.blog.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 public enum RoleType {
 
-	USER,ADMIN
+	USER, SELLER, ADMIN
 }

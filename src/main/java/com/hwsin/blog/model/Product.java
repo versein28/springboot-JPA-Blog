@@ -9,6 +9,7 @@ import javax.persistence.OrderBy;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -35,7 +36,7 @@ import javax.persistence.GenerationType;
 public class Product {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@Column(nullable = false,length = 100) // 상품명
@@ -44,13 +45,17 @@ public class Product {
 	@Column(nullable = false,length = 100) // 브랜드 명
 	private String prodBrand;
 	
+	@Column(nullable = false,length = 100) // 재고량
+	private int qty;
+	
+	@Column(nullable = false,length = 100) // 판매량
+	private int count;
+	
 	@Lob//대용량 데이터 - 설명
 	private String content; 
 
 	@Column(nullable = false,length = 100) // 상품 가격
-	private String prodKrw;
-	
-	private int count;//조회수
+	private int prodKrw;
 	
 	@ManyToOne(fetch = FetchType.EAGER) // Many = Product, User=One
 	@JoinColumn(name="userId")
@@ -62,5 +67,11 @@ public class Product {
 	@CreationTimestamp
 	private Timestamp createDate;
 	
+	public void subQty(Payment payment) {
+		this.qty -= payment.getQty();
+	}
 	
+	public void addCount(Payment payment) {
+		this.count += payment.getQty();
+	}
 }

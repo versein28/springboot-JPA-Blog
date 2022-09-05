@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import com.hwsin.blog.dto.IamportDto;
 
 @Service
-public class PaymentService {
+public class IamportService { // 아임포트 REST API
 	@Value("${imp_key}")
 	private String imp_key;
 
@@ -41,7 +41,7 @@ public class PaymentService {
 		return restTemplate.postForObject("https://api.iamport.kr/users/getToken", entity, String.class);
 	}
 	
-	public JSONObject GetPayInfo(String token, String imp_uid) throws ParseException {
+	public JSONObject GetPayment(String token, String imp_uid) throws ParseException {
 		JSONObject objData = (JSONObject) new JSONParser().parse(token);
 		JSONObject response = (JSONObject) objData.get("response");
 		String access_token = (String) response.get("access_token");

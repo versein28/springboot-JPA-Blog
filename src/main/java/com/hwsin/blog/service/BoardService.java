@@ -5,17 +5,21 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hwsin.blog.dto.ReplySaveRequestDto;
+import com.hwsin.blog.dto.ResponseDto;
 import com.hwsin.blog.model.Board;
 import com.hwsin.blog.model.RoleType;
 import com.hwsin.blog.model.Users;
 import com.hwsin.blog.repository.BoardRepository;
 import com.hwsin.blog.repository.ReplyRepository;
 import com.hwsin.blog.repository.UsersRepository;
+
+import net.bytebuddy.implementation.bytecode.Throw;
 
 @Service
 public class BoardService {
@@ -25,7 +29,7 @@ public class BoardService {
 
 	@Autowired
 	private ReplyRepository replyRepository;
-	
+
 	@Transactional
 	public void 글쓰기(Board board, Users user) { // title, content
 		board.setCount(0);
@@ -45,6 +49,11 @@ public class BoardService {
 	}
 
 	@Transactional
+	public void 조회수증가(int id) {
+		boardRepository.increaseViewCount(id);
+	}
+
+	@Transactional
 	public void 글삭제하기(int id) {
 		System.out.println("글삭제하기 : " + id);
 		boardRepository.deleteById(id);
@@ -59,13 +68,14 @@ public class BoardService {
 		board.setContent(requestBoard.getContent());
 		// 해당 함수로 종료시(Service가 종료될 때) 트랜잭션이 종료됩니다. 이때 더티체킹 - 자동 업데이트가 됨. db flush
 	}
-	
+
 	@Transactional
 	public void 댓글쓰기(ReplySaveRequestDto replySaveRequestDto) {
-		int result = replyRepository.mSave(replySaveRequestDto.getUserId(), replySaveRequestDto.getBoardId(), replySaveRequestDto.getContent());
-		System.out.println("BoardService : "+result);
+		int result = replyRepository.mSave(replySaveRequestDto.getUserId(), replySaveRequestDto.getBoardId(),
+				replySaveRequestDto.getContent());
+		System.out.println("BoardService : " + result);
 	}
-	
+
 	@Transactional
 	public void 댓글삭제(int replyId) {
 		replyRepository.deleteById(replyId);

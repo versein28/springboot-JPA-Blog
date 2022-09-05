@@ -3,10 +3,12 @@ package com.hwsin.blog.controller;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,10 +36,26 @@ public class ProductController {
 	@Autowired
 	ProductService productService;
 
-	@GetMapping("/auth/product") // 상품 목록보기
-	public String product(Model model,
-			@PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-		model.addAttribute("products", productService.상품목록보기(pageable));
+	@GetMapping("/auth/product") // 정렬 목록보기
+	public String getProduct(@RequestParam(required = false, defaultValue = "") String keyword,
+			@RequestParam(required = false, defaultValue = "") String category_name,
+			@RequestParam(required = false, defaultValue = "") String reverseOrder,
+			@RequestParam(required = false, defaultValue = "최신상품순(default)") String content_name,
+			@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+			@PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+		model.addAttribute("content_name", content_name); // 최신상품순(default)
+		if (keyword.isEmpty() && reverseOrder.equals("true") && !category_name.isEmpty())
+			model.addAttribute("products", productService.오름차순목록보기(pageable, pageNo, category_name));
+		else if (keyword.isEmpty() && reverseOrder.isEmpty() && !category_name.isEmpty())
+			model.addAttribute("products", productService.내림차순목록보기(pageable, pageNo, category_name));
+		else if (!keyword.isEmpty() && reverseOrder.equals("true") && !category_name.isEmpty())
+			model.addAttribute("products", productService.검색오름차순목록보기(pageable, pageNo, keyword, category_name));
+		else if (!keyword.isEmpty() && reverseOrder.isEmpty() && !category_name.isEmpty())
+			model.addAttribute("products", productService.검색내림차순목록보기(pageable, pageNo, keyword, category_name));
+		else if (!keyword.isEmpty() && reverseOrder.isEmpty() && category_name.isEmpty())
+			model.addAttribute("products", productService.검색목록보기(pageable, keyword));
+		else
+			model.addAttribute("products", productService.상품목록보기(pageable));
 
 		return "product/product";
 	}
@@ -48,15 +66,16 @@ public class ProductController {
 
 		return "product/detail";
 	}
-	
+
 	@GetMapping("/product/{id}/updateForm") // 상품 수정 페이지 보기
 	public String updateForm(@PathVariable int id, Model model) {
 		model.addAttribute("product", productService.상품상세보기(id));
 
 		return "product/updateForm";
 	}
-	
-	// USERS 권한이 필요
+
+	// ADMIN or SELLER 권한이 필요
+	@PreAuthorize("hasAnyRole('ADMIN','SELLER')")
 	@GetMapping("/product/saveForm")
 	public String saveForm() {
 		return "product/saveForm";

@@ -1,6 +1,7 @@
 package com.hwsin.blog.controller.api;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,48 +20,53 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hwsin.blog.config.auth.PrincipalDetail;
 import com.hwsin.blog.dto.IamportDto;
-import com.hwsin.blog.model.Iamport;
-import com.hwsin.blog.service.IamportService;
+import com.hwsin.blog.model.Payment;
 import com.hwsin.blog.service.PaymentService;
+import com.hwsin.blog.service.IamportService;
 
 @RestController
-public class KakaoApiController {
+public class IamportApiController {
 
-	@Autowired
-	private PaymentService paymentService;
-	
 	@Autowired
 	private IamportService iamportService;
 	
-	@PostMapping("/payments/complete") // DB에 담는 역할 
-	public JSONObject paymentComplete(@RequestBody JSONObject imp_uid) throws IOException, ParseException {
-		String token = paymentService.GetToken(); // 토큰 받기
-		String StrImpUid = (String) imp_uid.get("imp_uid");
-		JSONObject rsp = paymentService.GetPayInfo(token, StrImpUid); // 결제정보 받기
+	@Autowired
+	private PaymentService PaymentService;
+	
+	@PostMapping("/payment/complete") // 
+	public JSONObject getCertification(@RequestBody JSONObject data, @AuthenticationPrincipal PrincipalDetail principal) throws IOException, ParseException {
+		// 토큰 받기
+		String token = iamportService.GetToken(); 
+		String StrImpUid = (String) data.get("imp_uid");
+		
+		// 결제정보 받기
+		JSONObject rsp = iamportService.GetPayment(token, StrImpUid); 
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 
 		String impUid = (String) rsp.get("imp_uid");
 		String merchantUid = (String) rsp.get("merchant_uid");
-		String buyerEmail = (String) rsp.get("buyer_email");
-		String buyerPostcode = (String) rsp.get("buyer_postcode");
-		String name = (String) rsp.get("name");
-		int amount = (int) rsp.get("amount");
+		String buyerAddr = (String) rsp.get("buyer_addr");
+		String buyerTel = (String) data.get("buyer_tel");
+		int prodId = Integer.parseInt(String.valueOf(data.get("prodId")));
+		int amount = Integer.parseInt(String.valueOf(rsp.get("amount")));
+		int quantity = Integer.parseInt(String.valueOf(data.get("quantity")));
 		
 		map.put("imp_uid", impUid);
 		map.put("merchant_uid", merchantUid);
-		map.put("buyer_email", buyerEmail);
-		map.put("buyer_postcode", buyerPostcode);
-		map.put("name", name);
+		map.put("buyer_addr", buyerAddr);
+		map.put("buyer_tel", buyerTel);
 		map.put("amount", amount);
+		map.put("qty", quantity);
 		
 		ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
-		Iamport iamport = mapper.convertValue(map, Iamport.class);
+		Payment Payment = mapper.convertValue(map, Payment.class);
 		
-		iamportService.저장하기(iamport);
+		PaymentService.결제하기(Payment, prodId ,principal.getUser());
 		
-		return rsp;
+		return data;
 	}
 
 }

@@ -2,7 +2,7 @@
 
 <%@ include file="../layout/header.jsp"%>
 
-<div class="container">
+<div class="container" style="width:700px">
 	<button class="btn btn-secondary" onclick="history.back()">돌아가기</button>
 
 	<c:if test="${board.user.id == principal.user.id}">
@@ -24,18 +24,18 @@
 	<hr />
 
 	<div class="card">
-		<form>
+		<!-- <form> -->
 			<input type="hidden" id="userId" value="${principal.user.id}" /> <input type="hidden" id="boardId" value="${board.id}" />
 			<div class="card-body">
 				<textarea id="reply-content" class="form-control" rows="1"></textarea>
 			</div>
 			<div class="card-footer">
-				<button type="button" id="btn-reply-save" class="btn btn-primary">등록</button>
+				<button type="button" id="btn-reply-save" class="btn btn-light">등록</button>
 			</div>
-		</form>
+		<!-- </form> -->
 	</div>
 	<br />
-	<div class="card">
+	<div class="card mb-3">
 		<div class="card-header">댓글 리스트</div>
 		<ul id="reply-box" class="list-group">
 			<c:forEach var="reply" items="${board.reply}">
@@ -55,5 +55,6 @@
 		</ul>
 	</div>
 </div>
+</section>
 <script src="/js/board.js"></script>
 <%@ include file="../layout/footer.jsp"%>
