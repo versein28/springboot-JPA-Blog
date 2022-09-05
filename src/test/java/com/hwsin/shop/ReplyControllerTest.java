@@ -1,4 +1,4 @@
-package com.hwsin.blog;
+package com.hwsin.shop;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hwsin.blog.model.Board;
-import com.hwsin.blog.model.Reply;
-import com.hwsin.blog.repository.BoardRepository;
-import com.hwsin.blog.repository.ReplyRepository;
+import com.hwsin.shop.model.Board;
+import com.hwsin.shop.model.Reply;
+import com.hwsin.shop.repository.BoardRepository;
+import com.hwsin.shop.repository.ReplyRepository;
 
 @RestController
 public class ReplyControllerTest {

@@ -1,4 +1,4 @@
-package com.hwsin.blog;
+package com.hwsin.shop;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hwsin.blog.model.RoleType;
-import com.hwsin.blog.model.Users;
-import com.hwsin.blog.repository.UsersRepository;
+import com.hwsin.shop.model.RoleType;
+import com.hwsin.shop.model.Users;
+import com.hwsin.shop.repository.UsersRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
