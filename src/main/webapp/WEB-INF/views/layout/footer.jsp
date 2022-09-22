@@ -2,7 +2,7 @@
 
 <footer>
 	<nav>
-		<a href='https://github.com/versein28/springboot-JPA-Blog' target='_blank'>Github</a>
+		<a href='https://github.com/versein28/springboot-JPA-shop' target='_blank'>Github</a>
 	</nav>
 	<p>
 		<span>E-mail : versein28@gmail.com</span>

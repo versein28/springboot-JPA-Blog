@@ -74,4 +74,12 @@ public class Product {
 	public void addCount(Payment payment) {
 		this.count += payment.getQty();
 	}
+	
+	public void addQty(Payment payment) {
+		this.qty += payment.getQty();
+	}
+	
+	public void subCount(Payment payment) {
+		this.count -= payment.getQty();
+	}
 }

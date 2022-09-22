@@ -97,7 +97,8 @@ public class ProductService {
 	}
 	
 	/* 실시간 랭킹  */
-	public List<Product> 실시간랭킹보기(Product product) {
-		return productRepository.findTop6ByContentContaining(product.getContent());
+	public Page<Product> 실시간랭킹보기(String content, Pageable pageable) {
+		pageable =   PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "count"));
+		return productRepository.findTop6ByProdNameContaining(content, pageable);
 	}
 }

@@ -1,66 +1,75 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ include file="layout/header.jsp"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="container">
-	<div class="container" style="width: 500px; float: left;">
-		<span class="m-1"><h5>공지사항</h5></span>
-		<c:forEach var="board" items="${boards.content}">
-			<div class="card mb-3">
-				<div class="card-body">
-					<p class="card-title">${board.title}</p>
-					<a href="/board/${board.id}" class="btn btn-light">상세보기</a>
-				</div>
-			</div>
-		</c:forEach>
 
-		<ul class="pagination justify-content-center">
-			<c:choose>
-				<c:when test="${boards.first}">
-					<li class="page-item disabled"><a class="page-link" href="?page=${boards.number-1}">Previous</a></li>
-				</c:when>
-				<c:otherwise>
-					<li class="page-item"><a class="page-link" href="?page=${boards.number-1}">Previous</a></li>
-				</c:otherwise>
-			</c:choose>
+<div class="container main">
+    <div class="row">
+        <div class="container">
+            <span class="m-1">
+                <h5>공지사항</h5>
+            </span>
+            <!-- 공지사항  -->
+            <div class="dataTableBody">
+                <c:forEach var="board" items="${boards.content}">
+                    <div class="dataTable card mb-3">
+                        <div class="card-body">
+                            <p class="card-title">${board.title}</p>
+                            <a href="/board/${board.id}" class="btn btn-light">상세보기</a>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+            <!--  페이지네이션 -->
+            <ul class="pagination justify-content-center">
+                <c:choose>
+                    <c:when test="${boards.first}">
+                        <li class="page-item disabled"><a id="${boards.number-1}" class="page-link" href="#">Previous</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item"><a id="${boards.number-1}" class="page-link" href="#">Previous</a></li>
+                    </c:otherwise>
+                </c:choose>
 
-			<c:choose>
-				<c:when test="${boards.last}">
-					<li class="page-item disabled"><a class="page-link" href="?page=${boards.number+1}">Next</a></li>
-				</c:when>
-				<c:otherwise>
-					<li class="page-item"><a class="page-link" href="?page=${boards.number+1}">Next</a></li>
-				</c:otherwise>
-			</c:choose>
-
-		</ul>
-		<%-- 	//방문자 차트
+                <c:choose>
+                    <c:when test="${boards.last}">
+                        <li class="page-item disabled"><a id="${boards.number+1}" class="page-link" href="#">Next</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item"><a id="${boards.number+1}" class="page-link" href="#">Next</a></li>
+                    </c:otherwise>
+                </c:choose>
+            </ul>
+            <!--  페이지네이션 끝 -->
+	<!--  //방문자 차트
 	<div style="margin:auto;width:800px;">
 		<canvas id="line-chart" class="mb-3 ml-3" width="800" height="370"></canvas>
-	</div> --%>
-	</div>
-
-	<div class="container" style="width: 500px; float: left;">
-		<span class="m-1"><h5>실시간 랭킹</h5></span>
-		<ul id="rank" style="width: 200px; height: 30px;">
-			<li value="서랍">서랍</li>
-			<li value="의자">의자</li>
-			<li value="침대">침대</li>
-			<li value="쇼파">쇼파</li>
-			<li value="테이블,탁자">테이블</li>
-		</ul>
-		<ul class="image-gallery">
-<!-- 			<li><a>1위</a> <img src="https://source.unsplash.com/VWcPlbHglYc/640x416" alt="" />
-				<div class="overlay">
-					<span>Image title</span>
-				</div></li> -->
-		</ul>
-	</div>
-
+	</div>  -->
+        </div>
+		<!-- 공지사항  끝-->
+        <div class="container">
+            <span class="m-1">
+                <h5>실시간 랭킹</h5>
+            </span>
+            <!-- 실시간 랭킹 -->
+            <ul id="rank">
+                <li id="desk" value="서랍">서랍</li>
+                <li id="chair" value="의자">의자</li>
+                <li id="bed" value="침대">침대</li>
+                <li id="sofa" value="쇼파">쇼파</li>
+                <li id="table" value="테이블">테이블</li>
+            </ul>
+            <ul class="image-gallery">
+			 <!--  ajax 출력 -->
+            </ul>
+             <!-- 실시간 랭킹 끝 -->
+        </div>
+    </div>
 </div>
 
 </section>
-<script type="text/javascript">
-	/* 	$(document).ready(function() {
+<!-- <script type="text/javascript">
+ 	$(document).ready(function() {
 	 getGraph();
 	 });
 
@@ -124,8 +133,8 @@
 	 }
 
 	 }) // ajax	  
-	 } // getGraph */
-</script>
+	 } // getGraph 
+</script> -->
 
-<script src="/js/product.js"></script>
+<script src="/js/index.js"></script>
 <%@ include file="layout/footer.jsp"%>

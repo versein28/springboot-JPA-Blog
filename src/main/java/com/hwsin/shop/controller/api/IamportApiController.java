@@ -33,16 +33,16 @@ public class IamportApiController {
 	private IamportService iamportService;
 	
 	@Autowired
-	private PaymentService PaymentService;
+	private PaymentService paymentService;
 	
-	@PostMapping("/payment/complete") // 
+	@PostMapping("/payments/complete") // 결제하기 
 	public JSONObject getCertification(@RequestBody JSONObject data, @AuthenticationPrincipal PrincipalDetail principal) throws IOException, ParseException {
-		// 토큰 받기
-		String token = iamportService.GetToken(); 
-		String StrImpUid = (String) data.get("imp_uid");
+		// 엑세스 토큰 받기
+		String token = iamportService.getToken(); 
+		String imp_uid = (String) data.get("imp_uid");
 
-		// 결제정보 받기
-		JSONObject rsp = iamportService.GetPayment(token, StrImpUid); 
+		// import에서 결제정보 받기
+		JSONObject rsp = iamportService.getPayment(token, imp_uid); 
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 
@@ -54,19 +54,42 @@ public class IamportApiController {
 		int amount = Integer.parseInt(String.valueOf(rsp.get("amount")));
 		int quantity = Integer.parseInt(String.valueOf(data.get("quantity")));
 		
-		map.put("imp_uid", impUid);
-		map.put("merchant_uid", merchantUid);
-		map.put("buyer_addr", buyerAddr);
-		map.put("buyer_tel", buyerTel);
+		map.put("impUid", impUid);
+		map.put("merchantUid", merchantUid);
+		map.put("buyerAddr", buyerAddr);
+		map.put("buyerTel", buyerTel);
 		map.put("amount", amount);
 		map.put("qty", quantity);
 		
 		ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
 		Payment Payment = mapper.convertValue(map, Payment.class);
 		
-		PaymentService.결제하기(Payment, prodId ,principal.getUser());
+		paymentService.결제하기(Payment, prodId ,principal.getUser());
 		
 		return data;
 	}
-
+	
+	@PostMapping("/payments/cancel")
+	public JSONObject getRefund(@RequestBody JSONObject data, @AuthenticationPrincipal PrincipalDetail principal) throws ParseException {				
+		String merchant_uid = (String) data.get("merchant_uid");
+		int cancel_request_amount = Integer.parseInt(String.valueOf(data.get("cancel_request_amount")));
+		String reason = (String) data.get("reason");	
+		// 엑세스토큰 받기
+		String token = iamportService.getToken(); 
+		// 거래내역 조회
+		String imp_uid = paymentService.거래내역조회(merchant_uid);
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("reason", reason);
+		map.put("imp_uid", imp_uid);
+		map.put("amount", cancel_request_amount);
+		
+		// import에 환불요청하기
+		JSONObject rsp = iamportService.getRefund(map,token); 
+		// 환불요청 성공시 결제내역 삭제
+		if(Integer.parseInt(String.valueOf(rsp.get("code"))) == 0) {
+			paymentService.주문취소(merchant_uid);
+		}
+		return rsp;
+	}
 }

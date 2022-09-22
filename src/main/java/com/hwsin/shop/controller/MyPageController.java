@@ -37,10 +37,11 @@ public class MyPageController {
 			@RequestParam(value = "fromDate", required = false, defaultValue = "") String fromDate,
 			@RequestParam(value = "toDate", required = false, defaultValue = "") String toDate) {
 		if (!fromDate.isEmpty() && !toDate.isEmpty())
-			model.addAttribute("payments", paymentService.선택날짜결제내역조회(principal.getUser(), pageable, fromDate, toDate));
+			model.addAttribute("payments", paymentService.선택날짜결제리스트조회(principal.getUser(), pageable, fromDate, toDate));
 		else
-			model.addAttribute("payments", paymentService.결제내역조회(principal.getUser(), pageable));
-
+			model.addAttribute("payments", paymentService.결제리스트조회(principal.getUser(), pageable));
+		model.addAttribute("user", principal.getUser()); // 사용자 정보
+		
 		return "user/myPage";
 	}
 

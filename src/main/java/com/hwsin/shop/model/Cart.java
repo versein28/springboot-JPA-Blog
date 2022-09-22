@@ -18,13 +18,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+
 @Entity
+@Getter
+@NoArgsConstructor
 public class Cart {
 
 	@Id
@@ -32,6 +32,7 @@ public class Cart {
 	private int id;
 
 	@OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, orphanRemoval = true)
+	@JsonIgnoreProperties({"cart","product"})
 	private List<CartProduct> wishList = new ArrayList<>();
 	
 	public void addCartProducts(CartProduct cartProduct) {

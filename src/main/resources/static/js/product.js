@@ -1,27 +1,6 @@
-//실시간 랭킹
-$("#rank li").click(function() {
-/*   var data = {
-      content: $(this).attr("value")
-   };*/
-   var content = $(this).attr("value");
-   
-   $.ajax({
-      type: "POST",
-      url: "/api/product/rank",
-      data: content,/*
-      contentType: "application/json; charset=utf-8", // body데이터가 어떤 타입인지(MIME)
-      dataType: "json", // 요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 문자열 (생긴게  json이라면) => javascript오브젝트로 변경
-*/      success: function(result) {
-        
-            console.log("result"+result);
-         
-      },
-      error: function(request, status, error) {
-    	  console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-      }
-   });
-});
-
+//csrf토큰
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
 let product = {
 		init: function(){
 			$("#btn-save").on("click", ()=>{ 
@@ -36,6 +15,23 @@ let product = {
 		},
 		
 		save: function(){
+			// 유효성 검사
+			if ($('#prodName').val() == "") {
+	            alert("상품이름을 입력해 주십시오.");
+	            return false;
+	        }    
+	        if ($('#prodBrand').val() == "") {
+	            alert("브랜드명을 입력해 주십시오.");
+	            return false;
+	        }
+	        if ($('#prodKrw').val() == "") {
+	            alert("가격을 입력해 주십시오.");
+	            return false;
+	        }
+	        if ($('#qty').val() == "") {
+	            alert("수량을 입력해 주십시오.");
+	            return false;
+	        }
 			// 따옴표 제거
 			var formData = new FormData($("#save-form")[0]);
 			var prodKrwStr = formData.get('prodKrw');
@@ -46,6 +42,10 @@ let product = {
 				type: "POST",
 				url: "/api/product",
 				data: formData /* new FormData($("#save-form")[0]) */,
+				beforeSend : function(xhr)
+		        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+		        },
 			    enctype: 'multipart/form-data',
 			    processData: false,
 			    contentType: false
@@ -62,7 +62,11 @@ let product = {
 			
 			$.ajax({ 
 				type: "DELETE",
-				url: "/api/product/"+id
+				url: "/api/product/"+id,
+				beforeSend : function(xhr)
+		        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+		        }
 			}).done(function(resp){
 				alert("삭제가 완료되었습니다.");
 				location.href = "/auth/product";
@@ -83,6 +87,10 @@ let product = {
 				type: "POST",
 				url: "/api/product/"+id,
 			    data: new FormData($("#update-form")[0]),
+				beforeSend : function(xhr)
+		        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+		        },
 			    enctype: 'multipart/form-data',
 			    processData: false,
 			    contentType: false

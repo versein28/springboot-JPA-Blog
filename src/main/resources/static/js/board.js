@@ -1,4 +1,6 @@
-
+//csrf토큰
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
 let index = {
 		init: function(){
 			$("#btn-save").on("click", ()=>{ 
@@ -14,17 +16,23 @@ let index = {
 				this.replySave();
 			});
 		},
-
-		save: function(){
+		save: function(){	
+			if ($('#title').val() == "") {
+	            alert("제목을 입력해 주십시오.");
+	            return false;
+	        }         
 			let data = {
 					title: $("#title").val(),
 					content: $("#content").val()
-			};
-			
+			};		
 			$.ajax({ 
 				type: "POST",
 				url: "/api/board",
 				data: JSON.stringify(data),
+				beforeSend : function(xhr)
+		        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+		        },
 				contentType: "application/json; charset=utf-8",
 				dataType: "json"
 			}).done(function(resp){
@@ -36,11 +44,14 @@ let index = {
 		},
 		
 		deleteById: function(){
-			let id = $("#id").text();
-			
+			let id = $("#id").text();			
 			$.ajax({ 
 				type: "DELETE",
 				url: "/api/board/"+id,
+				beforeSend : function(xhr)
+		        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+		        },
 				dataType: "json"
 			}).done(function(resp){
 				alert("삭제가 완료되었습니다.");
@@ -51,17 +62,19 @@ let index = {
 		},
 		
 		update: function(){
-			let id = $("#id").val();
-			
+			let id = $("#id").val();	
 			let data = {
 					title: $("#title").val(),
 					content: $("#content").val()
 			};
-
 			$.ajax({ 
 				type: "PUT",
 				url: "/api/board/"+id,
 				data: JSON.stringify(data),
+				beforeSend : function(xhr)
+		        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+		        },
 				contentType: "application/json; charset=utf-8",
 				dataType: "json"
 			}).done(function(resp){
@@ -83,6 +96,10 @@ let index = {
 				type: "POST",
 				url: `/api/board/${data.boardId}/reply`,
 				data: JSON.stringify(data),
+				beforeSend : function(xhr)
+		        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+		        },
 				contentType: "application/json; charset=utf-8",
 				dataType: "json"
 			}).done(function(resp){
@@ -97,6 +114,10 @@ let index = {
 			$.ajax({ 
 				type: "DELETE",
 				url: `/api/board/${boardId}/reply/${replyId}`,
+				beforeSend : function(xhr)
+		        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+		        },
 				dataType: "json"
 			}).done(function(resp){
 				alert("댓글삭제 성공");

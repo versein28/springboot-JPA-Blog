@@ -1,5 +1,6 @@
 package com.hwsin.shop.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +17,8 @@ public interface BoardRepository extends JpaRepository<Board, Integer>{
 	  @Modifying    
 	  @Query("update Board b set b.count = b.count + 1 where b.id = ?1")    
 	  void increaseViewCount(int id);
+	  
+	  boolean existsByUserId(int userId);
+	  List<Board> findByUserId(int userId);
 }
 

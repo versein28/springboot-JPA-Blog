@@ -65,7 +65,7 @@ public class Users {
 	@Column(length = 50)
 	private String bt; // 사업자등록타입
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
 	@JoinColumn(name = "cartId")
 	private Cart cart;
 

@@ -1,3 +1,6 @@
+//csrf토큰
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
 //장바구니 담기
 $("#cart-save").on("click", function() {
 	let data = {
@@ -7,6 +10,10 @@ $("#cart-save").on("click", function() {
 		type: "POST",
 		url: "/api/cart",
 		data: JSON.stringify(data),
+		beforeSend : function(xhr)
+        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+			xhr.setRequestHeader(header, token);
+        },
 		contentType: "application/json; charset=utf-8",
 		dataType: "json"
 	}).done(function(rsp) {
@@ -30,6 +37,10 @@ $('#deleteCheckedItem').on("click", function() {
 	$.ajax({
 		type: "POST",
 		url: "/api/cart/delete",
+		beforeSend : function(xhr)
+        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+			xhr.setRequestHeader(header, token);
+        },
 		data: {
 			checkBoxArr: checkBoxArr
 			// seq 값을 가지고 있음.
@@ -56,11 +67,16 @@ $(".orderCountModifyBtn").on("click", function() {
 		type: "PUT",
 		url: "/api/cart/" + id,
 		data: JSON.stringify(data),
+		beforeSend : function(xhr)
+        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+			xhr.setRequestHeader(header, token);
+        },
 		contentType: "application/json; charset=utf-8",
 		dataType: "json"
 	}).done(function(rsp) {
 		if (rsp.status = 200) {
 			alert("수량변경이 완료 되었습니다.");
+			location.reload();
 		} else {
 			alert(rsp.data);
 		}
@@ -76,6 +92,10 @@ $(".removeCartItemBtn").on("click", function() {
 		$.ajax({
 			type: 'DELETE',
 			url: "/api/cart/" + id,
+			beforeSend : function(xhr)
+	        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+				xhr.setRequestHeader(header, token);
+	        },
 			contentType: "application/json; charset=utf-8",
 			dataType: "json"
 		}).done(function(rsp) {

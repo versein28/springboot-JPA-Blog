@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp"%>
-
-<div class="container" style="width:700px">
+<div class="mb-3 text-center">
+    <h3>상품 등록</h3>
+</div>
+<div class="container mb-3">
 	<form id="save-form">
 		<div class="form-group">
 			<label for="prodName">Name</label> <input type="text" class="form-control" placeholder="Enter Name" id="prodName" name="prodName">
@@ -24,12 +26,12 @@
 			<textarea class="form-control summernote" rows="5" id="content" name="content"></textarea>
 		</div>
 
-		<img id="preview" style="width: 150px; height: auto;">
-		<div class="custom-file" style="margin-bottom: 10px;">
+		<img id="preview">
+		<div class="custom-file mb-1">
 			<input type="file" class="custom-file-input ex_file" id="file" name="file" onchange="readURL(this);"> <label class="custom-file-label" for="file">Choose file</label>
 		</div>
 	</form>
-	<button id="btn-save" type="button" class="btn btn-light">상품등록 완료</button>
+	<button id="btn-save" type="button" class="btn btn-light mt-2">상품등록 완료</button>
 </div>
 </section>
 <script>

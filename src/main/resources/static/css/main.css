@@ -1,0 +1,257 @@
+@charset "EUC-KR";
+/* 글로벌 */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+}
+
+section {
+	min-height: 100%;
+	padding-bottom: 110px;
+}
+input {
+	width: 110px;
+	height: 33px;
+}
+
+ul {
+	list-style: none;
+}
+
+.pointer {
+	cursor: pointer;
+}
+.container {
+	width: 500px;
+}
+
+.main {
+	width: 1024px;
+	display: flex;
+	flex-wrap: wrap;
+}
+.pagination {
+	margin: 0 auto;
+}
+#wrap {
+	min-height: 100vh;
+	position: relative;
+	width: 100%;
+}
+/* 인덱스 */
+#rank {
+	width: 200px;
+	height: 30px;
+}
+
+#rank li {
+	float: left;
+	margin-right: 3px;
+	color: #292b2c;
+}
+
+#rank li:hover {
+	font-weight: bold;
+	cursor: pointer;
+}
+.image-gallery {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	overflow: hidden;
+}
+
+.image-gallery>li {
+	flex-basis: 150px;
+	/* width: 350px; */
+	float: left;
+}
+
+.image-gallery li img {
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	vertical-align: middle;
+	border-radius: 5px;
+}
+
+.image-gallery::after {
+	content: "";
+	flex-basis: 350px;
+}
+
+.image-gallery>li {
+	position: relative;
+	cursor: pointer;
+}
+
+.overlay {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: rgba(57, 57, 57, 0.502);
+	top: 0;
+	left: 0;
+	transform: scale(0);
+	transition: all 0.2s 0.1s ease-in-out;
+	color: #fff;
+	border-radius: 5px;
+	/* center overlay text */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* hover */
+.image-gallery li:hover .overlay {
+	transform: scale(1);
+}
+
+/* 게시판 */
+.board-content {
+	height:auto;
+}
+/* 상품  */
+.dropdown > .btn {
+	display:inline-block;
+}
+
+.soldOut {
+	color: red;
+	margin-left:10px;
+}
+
+.img-box {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 240px;
+}
+
+#preview {
+	width: 150px;
+	height: auto;
+}
+
+#preview-lg {
+	max-width: 100%;
+	height: auto;
+}
+.orderContainer {
+	width: 100%;
+	margin: 30px auto !important;
+}
+
+.orderContainer > div {
+	margin-left: 30px;
+	margin: 0 auto;
+}
+.orderForm > .row {
+	margin: 0;
+}
+.orderForm input {
+	margin-bottom: 5px;
+}
+
+#datePickerForm > label, input {
+	font-size: 12px;
+}
+
+#datePickerForm > .form-control {
+	width: 20% !important;
+	display:inline-block;
+}
+
+.ui-datepicker {
+	font-size: 12px;
+	width: 190px;
+}
+.
+.ui-datepicker select.ui-datepicker-month {
+	width: 40%;
+	font-size: 11px;
+}
+
+.ui-datepicker select.ui-datepicker-year {
+	width: 50%;
+	font-size: 11px;
+}
+
+#join-individual, #join-buisness:hover {
+	cursor: pointer;
+}
+
+/*datepicker에서 사용한 이미지 버튼 style적용*/
+img.ui-datepicker-trigger {
+	margin-left: 5px;
+	vertical-align: middle;
+	cursor: pointer;
+}
+/* myPage, myCart */
+#itemImage {
+	 max-width: 100%; 
+	 height: auto;
+}
+
+.orderBox , .cartBox {
+	width:700px;	
+}
+
+.orderBox > .table a {
+	color:gray;
+}
+#myPageContainer {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+#myPageContainer > div {
+	float: left;
+}
+
+.cartBox .table input {
+	width:10px;
+}
+.cartBox .table .form-control {
+	width: 50px !important;
+}
+
+/* 푸터  */
+footer {
+	width: 100%;
+	height: 110px;
+	bottom: 0px;
+	position: absolute;
+	border-top: 1px solid #c4c4c4;
+	padding-top: 15px;
+	color: #808080;
+	font-size: 11px;
+}
+
+footer a {
+	display: inline-block;
+	margin: 0 20px 10px 20px;
+	color: #808080;
+	font-size: 11px;
+}
+
+footer a:visited {
+	color: #808080;
+}
+
+footer p {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+footer p span {
+	display: inline-block;
+	margin-left: 20px;
+}

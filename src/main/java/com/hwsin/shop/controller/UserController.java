@@ -52,43 +52,43 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping("/user/updateForm")
-	public String updateForm() {
-		
-		return "user/updateForm";
-	}
-	
-	@GetMapping("/auth/joinForm") // 회원가입 선택
+	@GetMapping("/auth/joinForm") // 회원가입 폼
 	public String joinForm() {
 		
 		return "user/joinSelectionView";
 	}
 	
-	@GetMapping("/auth/userJoinForm") //일반 회원가입
+	@GetMapping("/auth/userJoinForm") // 일반 회원가입 폼
 	public String userJoinForm() {
 		
 		return "user/userJoinForm";
 	}
 	
-	@GetMapping("/auth/sellerJoinForm") // 사업자 회원가입
+	@GetMapping("/auth/sellerJoinForm") // 사업자 회원가입 폼
 	public String sellerJoinForm() {
 		
 		return "user/sellerJoinForm";
 	}
 	
-	@GetMapping("/auth/loginForm") //로그인 폼
+	@GetMapping("/auth/loginForm") // 로그인 폼
 	public String loginForm() {
 		
 		return "user/loginForm";
 	}
 	
-	@GetMapping("/auth/pwdSearchForm")
+	@GetMapping("/user/updateForm") // 회원정보 폼
+	public String updateForm() {
+		
+		return "user/updateForm";
+	}
+	
+	@GetMapping("/auth/pwdSearchForm") // 비밀번호 찾기
 	public String pwdSearchForm() {
 		
 		return "user/pwdSearchForm";
 	}
 	
-	@GetMapping("/auth/kakao/callback")
+	@GetMapping("/auth/kakao/callback") // 카카오 로그인
 	public String kakaoCallback(String code) {
 		// POST방식으로 key=value 데이터를 요청 (카카오쪽으로)
 		// Retrofit2

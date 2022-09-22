@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.hwsin.shop.model.Board;
 import com.hwsin.shop.model.Payment;
@@ -51,14 +52,35 @@ public class PaymentService {
 		product.addCount(payment); // Product 판매량 증가
 
 	}
-
 	@Transactional(readOnly = true)
-	public Page<Payment> 결제내역조회(Users users, Pageable pageable) {
+	public String 거래내역조회(String merchant_uid) {
+		Payment payment = paymentRepository.findByMerchantUid(merchant_uid).orElseThrow(() -> {
+			return new IllegalArgumentException("존재하지 않는 거래내역입니다.");
+		});
+		
+		return payment.getImpUid();
+	}
+	@Transactional
+	public void 주문취소(String merchant_uid) {
+		Payment payment = paymentRepository.findByMerchantUid(merchant_uid).orElseThrow(() -> {
+			return new IllegalArgumentException("존재하지 않는 거래내역입니다.");
+		});
+		
+		Product product = productRepository.findById(payment.getProduct().getId())
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품 입니다."));
+		
+		product.addQty(payment); // Product 재고량 증가
+		product.subCount(payment); // Product 판매량 감소
+		
+		paymentRepository.deleteById(payment.getId());
+	}
+	@Transactional(readOnly = true)
+	public Page<Payment> 결제리스트조회(Users users, Pageable pageable) {
 		return paymentRepository.findByUserId(users.getId(), pageable);
 	}
 
 	@Transactional(readOnly = true)
-	public Page<Payment> 선택날짜결제내역조회(Users users, Pageable pageable, String fromDate, String toDate) {
+	public Page<Payment> 선택날짜결제리스트조회(Users users, Pageable pageable, String fromDate, String toDate) {
 		return paymentRepository.findBySelectedDate(users.getId(), fromDate, toDate, pageable);
 
 	}

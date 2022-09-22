@@ -32,7 +32,7 @@ public class DummyControllerTest {
 	@Autowired
 	private UsersRepository usersRepository;
 	
-	//http://localhost:8080/blog/dummy/join (요청)
+	//http://localhost:8080/shop/dummy/join (요청)
 	//username, password, email 값을 body에 담아서 보낸다.
 	/*
 	 * @PostMapping("/dummy/join")//insert public String join(String username,

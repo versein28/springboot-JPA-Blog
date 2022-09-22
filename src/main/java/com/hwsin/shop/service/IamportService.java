@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hwsin.shop.dto.IamportDto;
 import com.hwsin.shop.model.Board;
+import com.hwsin.shop.model.Payment;
 import com.hwsin.shop.model.Users;
 
 
@@ -29,7 +30,7 @@ public class IamportService { // 아임포트 REST API
 	@Value("${imp_secret}")
 	private String imp_secret;
 
-	public String GetToken() {
+	public String getToken() {
 		RestTemplate restTemplate = new RestTemplate();
 
 		// 서버로 요청할 Header
@@ -47,7 +48,7 @@ public class IamportService { // 아임포트 REST API
 		return restTemplate.postForObject("https://api.iamport.kr/users/getToken", entity, String.class);
 	}
 
-	public JSONObject GetPayment(String token, String imp_uid) throws ParseException {
+	public JSONObject getPayment(String token, String imp_uid) throws ParseException {
 		JSONObject objData = (JSONObject) new JSONParser().parse(token);
 		JSONObject response = (JSONObject) objData.get("response");
 		String access_token = (String) response.get("access_token");
@@ -67,5 +68,24 @@ public class IamportService { // 아임포트 REST API
 
 		return rsp;
 
+	}
+	
+	public JSONObject getRefund(Map map, String token) throws ParseException {
+		JSONObject objData = (JSONObject) new JSONParser().parse(token);
+		JSONObject response = (JSONObject) objData.get("response");
+		String access_token = (String) response.get("access_token");
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		// 서버로 요청할 Header
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("Authorization", access_token);
+
+		// 서버로 요청할 Body	
+		JSONObject body = new JSONObject(map);
+		HttpEntity<JSONObject> entity = new HttpEntity<>(body, headers);
+
+		return restTemplate.postForObject("https://api.iamport.kr/payments/cancel", entity, JSONObject.class);
 	}
 }

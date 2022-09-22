@@ -75,7 +75,7 @@ public class ProductController {
 	}
 
 	// ADMIN or SELLER 권한이 필요
-	@PreAuthorize("hasAnyRole('ADMIN','SELLER')")
+	//@PreAuthorize("hasAnyRole('ADMIN','SELLER')")
 	@GetMapping("/product/saveForm")
 	public String saveForm() {
 		return "product/saveForm";

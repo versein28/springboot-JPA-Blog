@@ -42,13 +42,13 @@ public class Payment {
 	private int id; //등록번호
 	
 	@Column(nullable = false,length = 100) // 결제번호
-	private String imp_uid;
+	private String impUid;
 	
 	@Column(nullable = false,length = 100) // 주문번호
-	private String merchant_uid;
+	private String merchantUid;
 	
 	@Column(nullable = false,length = 100) // 배송지 주소
-	private String buyer_addr;
+	private String buyerAddr;
 	
 	@Column(nullable = false,length = 100) // 주문량
 	private int qty;
@@ -57,7 +57,7 @@ public class Payment {
 	private int amount;
 	
 	@Column(nullable = false,length = 100) // 주문자 전화번호
-	private String buyer_tel;
+	private String buyerTel;
 	
 	@ManyToOne(fetch = FetchType.LAZY) // Many = 주문, One = 구매자
 	@JoinColumn(name="userId")
@@ -69,5 +69,5 @@ public class Payment {
 	
 	@Temporal(TemporalType.DATE)//결제일
 	@CreationTimestamp
-	private Date order_date;
+	private Date orderDate;
 }

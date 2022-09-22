@@ -46,26 +46,23 @@ public class UserApiController {
 	private JavaMailSender javaMailSender;
 
 	@PostMapping("/auth/joinProc")
-	public ResponseDto<Integer> save(@RequestBody Users user) { // username,email,password
+	public ResponseDto<Integer> save(@RequestBody Users user) { 
 		System.out.println("UserApiController : save 호출됨");
 		userService.회원가입(user);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
+	
+	@PostMapping("/auth/userCheck") 
+	public Optional<Users> userCheck(@RequestBody Users user) { 
+		System.out.println("UserApiController : userCheck 호출됨");
+		
+		return userService.유저중복확인(user);
+	}
 
-	// 스프링 시큐리티 이용해서 로그인!!(아래는 전통적인 방식)
-	/*
-	 * @PostMapping("/api/user/login") public ResponseDto<Integer>
-	 * login(@RequestBody Users user, HttpSession session) {
-	 * System.out.println("UserApiController : login 호출됨"); Users principal =
-	 * userService.로그인(user); // principal = 접근주체
-	 * 
-	 * if(principal != null) { session.setAttribute("principal", principal); }
-	 * return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); }
-	 */
-	@PutMapping("/user")
+	@PutMapping("/api/user")
 	public ResponseDto<Integer> update(@RequestBody Users user) {
 		userService.회원수정(user);
-		// 여기선ㄴ 트랜잭션이 종료되기 때문에 DB에 값은 변경이 돘음.
+		// 여기선  트랜잭션이 종료되기 때문에 DB에 값은 변경이 돘음.
 		// 그러나 세션값은 변경 되지 않은 상태이기 때문에 직접 세션값을 변경해줄 것임
 		// 세션 등록
 		Authentication authentication = authenticationManager
@@ -76,7 +73,7 @@ public class UserApiController {
 	}
 
 	@PostMapping("/auth/pwdSearch")
-	public ResponseDto<Integer> PwdSearchPost(@RequestBody Users user) {
+	public ResponseDto<Integer> PwdSearch(@RequestBody Users user) {
 		String changedPwd = userService.비밀번호찾기(user.getUsername(), user.getEmail());
 
 		SimpleMailMessage simpleMessage = new SimpleMailMessage();
@@ -87,5 +84,21 @@ public class UserApiController {
 
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
-
+	
+	@PostMapping("/api/deleteUser")
+	public ResponseDto<Integer> deleteUser(@RequestBody Users user, @AuthenticationPrincipal PrincipalDetail principal) {
+		userService.회원삭제(principal.getUser());
+		
+		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+	}
+	// 스프링 시큐리티 이용해서 로그인!!(아래는 전통적인 방식)
+	/*
+	 * @PostMapping("/api/user/login") public ResponseDto<Integer>
+	 * login(@RequestBody Users user, HttpSession session) {
+	 * System.out.println("UserApiController : login 호출됨"); Users principal =
+	 * userService.로그인(user); // principal = 접근주체
+	 * 
+	 * if(principal != null) { session.setAttribute("principal", principal); }
+	 * return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); }
+	 */
 }

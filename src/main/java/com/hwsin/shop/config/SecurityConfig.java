@@ -45,7 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-			.csrf().disable()  // csrf 토큰 비활성화 (테스트시 걸어두는 게 좋음)
+			//.csrf().disable()  // csrf 토큰 비활성화 (테스트시 걸어두는 게 좋음)
+			.httpBasic().and() // Http basic Auth 기반으로 로그인 인증창이 뜸 ( POSTMAN에서 basic Auth 사용시 이용)
 			.authorizeRequests()
 				.antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**", "/dummy/**")
 				.permitAll()
