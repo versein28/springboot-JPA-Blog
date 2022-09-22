@@ -209,6 +209,7 @@ let index = {
 			}).done(function(resp){
 				if(resp.status == 200 && resp.data == 1)
 					alert("회원탈퇴가 완료되었습니다.");
+					location.href = "/";
 				else {
 					console.log(JSON.stringify(resp));
 				}
