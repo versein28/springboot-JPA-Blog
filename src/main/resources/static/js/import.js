@@ -113,7 +113,7 @@ function cancelPay(merchant_uid, cancel_request_amount) {
     }).done(function(info) {
     	console.log(JSON.stringify(info));
     	if(info.code == 0) {
-    		msg = '환불이 완료되었습니다.';
+    		msg = '취소가 완료되었습니다.';
     	}
     	else {
     		msg = JSON.stringify(info.message);

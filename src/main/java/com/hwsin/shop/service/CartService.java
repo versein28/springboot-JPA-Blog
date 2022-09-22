@@ -1,5 +1,6 @@
 package com.hwsin.shop.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,10 +54,10 @@ public class CartService {
 		Cart cart = cartRepository.findById(users.getCart().getId())
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 장바구니 입니다."));
 
-		List<WishItemResponse> allitems = cart.getWishList().stream().map(CartProduct::toWishItemDto)
+		List<WishItemResponse> allitems = cart.getWishList().stream().sorted(Comparator.comparing(CartProduct::getId).reversed()).map(CartProduct::toWishItemDto)
 				.collect(Collectors.toList());
-		// pageable 객체 수동생성
-		Pageable pageable = PageRequest.of(pageNo, 4, Sort.by(Sort.Direction.DESC, "id"));
+		// pageable 객체 수동생성, 정렬은 리스트에 적용 되지않아서 사용 x
+		Pageable pageable = PageRequest.of(pageNo, 4);
 		//List -> Page객체로 변환
 		final int start = (int) pageable.getOffset();
 		final int end = Math.min((start + pageable.getPageSize()), allitems.size());
